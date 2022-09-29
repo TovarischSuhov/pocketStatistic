@@ -8,7 +8,7 @@ WORKDIR /build
 
 RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -ldflags '-extldflags "-static"' -o main cmd/main.go
 
-FROM scratch
+FROM alpine
 
 COPY --from=builder /build/main /app/
 
