@@ -18,4 +18,4 @@ COPY --from=builder /app/getPocketStatistic /app/getPocketStatistic
 
 EXPOSE 8080
 
-ENTRYPOINT ["getPocketStatistic"]
+ENTRYPOINT ["/app/getPocketStatistic"]
