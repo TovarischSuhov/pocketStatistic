@@ -1,21 +1,19 @@
 FROM golang:latest AS builder
 
-RUN mkdir /app
+RUN mkdir /build
 
-COPY . /app
+ADD . /build
 
-WORKDIR /app
+WORKDIR /build
 
-RUN ls -l
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -ldflags '-extldflags "-static"' -o main cmd/main.go
 
-RUN go build -mod=vendor -o getPocketStatistic cmd/main.go
+FROM scratch
 
-FROM alpine:latest
-
-RUN mkdir /app
-
-COPY --from=builder /app/getPocketStatistic /app/getPocketStatistic
+COPY --from=builder /build/main /app/
 
 EXPOSE 8080
 
-ENTRYPOINT ["/app/getPocketStatistic"]
+WORKDIR /app
+
+CMD ["./main"]
