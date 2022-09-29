@@ -1,12 +1,20 @@
 FROM golang:latest AS builder
 
-WORKDIR /usr/src/app
+RUN mkdir /app
+
+COPY . /app
+
+WORKDIR /app
 
 RUN ls -l
 
 RUN go build -mod=vendor -o getPocketStatistic cmd/main.go
 
-COPY --from=build getPocketStatistic getPocketStatistic
+FROM alpine:latest
+
+RUN mkdir /app
+
+COPY --from=builder /app/getPocketStatistic /app/getPocketStatistic
 
 EXPOSE 8080
 
