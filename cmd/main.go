@@ -16,14 +16,10 @@ func main() {
 	log.LogLevel = log.DebugLevel
 	log.UseColors = true
 	conf := config.GetConfig()
-	unreadGauge := prom.NewGauge(prom.GaugeOpts{Name: "unread"})
-	unreadTimeGauge := prom.NewGauge(prom.GaugeOpts{Name: "unread_time"})
-	archivedGauge := prom.NewGauge(prom.GaugeOpts{Name: "archived"})
-	archivedTimeGauge := prom.NewGauge(prom.GaugeOpts{Name: "archived_time"})
-	prom.MustRegister(unreadGauge)
-	prom.MustRegister(unreadTimeGauge)
-	prom.MustRegister(archivedGauge)
-	prom.MustRegister(archivedTimeGauge)
+	topicsGauge := prom.NewGaugeVec(prom.GaugeOpts{Name: "topics"}, []string{"type"})
+	readTimeGauge := prom.NewGaugeVec(prom.GaugeOpts{Name: "read_time"}, []string{"type"})
+	prom.MustRegister(topicsGauge)
+	prom.MustRegister(readTimeGauge)
 	go func() {
 		c := client.NewHTTPClient(conf.ConsumerKey, conf.AccessToken, conf.Host, conf.Path)
 		for {
@@ -48,11 +44,11 @@ func main() {
 				}
 			}
 			log.Info("unread: %d, unread_time: %d, archived: %d, archived_time: %d", unreadCount, unreadTime, archivedCount, archivedTime)
-			unreadGauge.Set(float64(unreadCount))
-			unreadTimeGauge.Set(float64(unreadTime))
-			archivedGauge.Set(float64(archivedCount))
-			archivedTimeGauge.Set(float64(archivedTime))
-			time.Sleep(time.Hour)
+			topicsGauge.WithLabelValues("unread").Set(float64(unreadCount))
+			readTimeGauge.WithLabelValues("unread").Set(float64(unreadTime))
+			topicsGauge.WithLabelValues("archived").Set(float64(archivedCount))
+			readTimeGauge.WithLabelValues("archived").Set(float64(archivedTime))
+			time.Sleep(time.Minute * 15)
 		}
 	}()
 	http.Handle("/metrics", promhttp.Handler())
