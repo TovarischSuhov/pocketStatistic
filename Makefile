@@ -1,4 +1,6 @@
-all:  build run
+LAST_VERSION=$(git tag -l --sort=-v:refname | head -n 1)
+
+all: build run
 
 run:
 	bin/main
@@ -13,3 +15,5 @@ lint:
 test:
 	go test ./...
 
+release:
+	go tag $(VERSION)
