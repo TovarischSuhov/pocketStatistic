@@ -1,4 +1,4 @@
-LAST_VERSION=$(git tag -l --sort=-v:refname | head -n 1)
+LAST_VERSION = $(git tag -l --sort=-v:refname | head -n 1)
 
 all: build run
 
@@ -16,4 +16,4 @@ test:
 	go test ./...
 
 release:
-	git tag $(VERSION)
+	./release.sh
