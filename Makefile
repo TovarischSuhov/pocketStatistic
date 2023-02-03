@@ -16,4 +16,4 @@ test:
 	go test ./...
 
 release:
-	go tag $(VERSION)
+	git tag $(VERSION)
