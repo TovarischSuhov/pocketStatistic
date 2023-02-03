@@ -26,6 +26,7 @@ func main() {
 			result, err := c.GetTopicsList()
 			if err != nil {
 				log.Error(err.Error())
+				continue
 			}
 			var (
 				unreadCount   int64
