@@ -64,7 +64,6 @@ func CountMetrics() {
 		readTimeGauge.WithLabelValues("unread").Set(float64(unreadTime))
 		topicsGauge.WithLabelValues("archived").Set(float64(archivedCount))
 		readTimeGauge.WithLabelValues("archived").Set(float64(archivedTime))
-		time.Sleep(time.Minute * 15)
 	}
 }
 

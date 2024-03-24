@@ -6,7 +6,7 @@ run:
 	bin/main
 
 build:
-	go build cmd/main.go -o bin/main
+	go build -o bin/main cmd/main.go
 
 
 lint:
